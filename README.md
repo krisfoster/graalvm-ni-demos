@@ -159,5 +159,91 @@ OK, so now we have added logging, let's see if it works by rebuilding an running
 
 `$ mvn clean package exec:exec -PJAVA`
 
+Great, that works. Now, let's build a native image using the maven profile:
 
-## Running Parts of the Application at Build Time
+`$ mvn clean package -PNATIVE_IMAGE`
+
+The run the built image:
+
+`$ ./target/file-count`
+
+This generates an error:
+
+```
+Exception in thread "main" java.lang.NoClassDefFoundError
+        at org.apache.log4j.Category.class$(Category.java:118)
+        at org.apache.log4j.Category.<clinit>(Category.java:118)
+        at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer(ClassInitializationInfo.java:350)
+        at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:270)
+        at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+        at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:235)
+        at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+        at oracle.ListDir.<clinit>(ListDir.java:75)
+        at com.oracle.svm.core.hub.ClassInitializationInfo.invokeClassInitializer(ClassInitializationInfo.java:350)
+        at com.oracle.svm.core.hub.ClassInitializationInfo.initialize(ClassInitializationInfo.java:270)
+        at java.lang.Class.ensureInitialized(DynamicHub.java:496)
+        at oracle.App.main(App.java:63)
+Caused by: java.lang.ClassNotFoundException: org.apache.log4j.Category
+        at com.oracle.svm.core.hub.ClassForNameSupport.forName(ClassForNameSupport.java:60)
+        at java.lang.Class.forName(DynamicHub.java:1211)
+        ... 12 more
+```
+Why? This is caused by our addition of the log4j library. It depends heavily upon reflection
+and when we generate the native image we do a lot of aggressive analysis to see what is called.
+Anything that isn't called, we assume is not needed. This is a "closed World" assumption. We assume
+that no reflection is taking place. So we need to let the native image tool know about this.
+
+We could do this by hand, but luckily we don't have to. The GraalVM Java runtime comes with
+a tracing agent that we use that will do this for us. It generates a number of JSON files that
+map all the cases of reflection, JNI, proxies and resources that it can locate,
+
+For our case it will be sufficient to run this only once, as there is only one path through our
+application, but we should bear in mind that we may need to do this a number of times with
+different input. Full docs on this can be found [here](https://www.graalvm.org/docs/reference-manual/native-image/#tracing-agent).
+
+The way to generate these JSON files is to add the following to the command line that is running
+your Java application. Notes that the agent params **MUST** come before any jar or classpath paremetrs. Also note that we specify a directory into which we would like to put the output.
+I have placed it into the source tree at:
+
+`src/main/resources/META-INF/native-image`
+
+If we place these files in this location, then the native image tooling will pick them up
+automaticatly.
+
+So to run the tracing agent:
+
+`$ java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -cp ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar oracle.App`
+
+The files should now be present.
+
+Note: I have also added a maven profile that will do this for you and this can be called as follows:
+
+`$ mvn clean package exec:exec -PJAVA_AGENT_LIB`
+
+Now if we run the native image generation again and run the generated image:
+
+```
+$ mvn package -PNATIVE_IMAGE
+$ time ./target/.file-count
+```
+
+We should see that it works and that is also produces log messages.
+
+## Note on Configuring Native Image Generation
+
+We cna also pass parameters to the native image tool using a properties files that
+typically lives in:
+
+`src/main/resources/META-INF/native-image/native-image.properties`
+
+In this deno we have included one such file.
+
+## Conclusion
+
+We've see a few of the capabilities of GRAALVM's native image funcitonality, including:
+
+1. Generating a fast native image from a Java command line app
+2. How to use maven to build a native image
+3. How to use the tracing agent to automate the process of finding relfection in our code
+
+We hope that this has been useful. Good Luck!
