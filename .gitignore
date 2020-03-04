@@ -27,4 +27,4 @@ buildNumber.properties
 .vscode/
 
 # Special ignores for this demo
-src/main/resources/native-image/*.json
+src/main/resources/META-INF/native-image/*.json

@@ -52,29 +52,19 @@ package oracle;
 public final class App {
 
     /**
-     * Says hello to the world.
+     * Runs the application. This will count the files
      * @param args The arguments of the program.
      */
     public static void main(String[] args) throws Exception {
 
-        //System.out.println("Am in a native image? : " + ImageInfo.inImageCode());
-
+        // Set a default root directory, if one is not passed in
 		String root = ".";
 		if (args.length > 0) {
 			root = args[0];
 		}
 
         final FileCount count = ListDir.list(root);
-
-        //final Configuration conf = ImageInfo.inImageCode() ?
-        //                            ImageSingletons.lookup(Configuration.class) :
-        //                            Configuration.loadFromFile();
-
-        //
-        //final String size = conf.isHumanReadable() ?
-        //                            ListDir.humanReadableByteCountBin(count.getSize()) :
-        //                            count.getSize() + " bytes";
-        final String size = count.getSize() + " bytes";
+        final String size = ListDir.humanReadableByteCountBin(count.getSize());
 
         System.out.println("Counting directory: " + root);
         System.out.println("Total: "

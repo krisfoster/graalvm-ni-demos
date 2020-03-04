@@ -71,8 +71,8 @@ class FileCount {
 }
 
 public class ListDir {
-    // Add a logger
-    final static Logger logger = Logger.getLogger(ListDir.class);
+    // Add a logger - don't do this yet :)
+    //final static Logger logger = Logger.getLogger(ListDir.class);
 
 
     /**
@@ -84,17 +84,23 @@ public class ListDir {
 		long[] size = {0};
 		long[] count = {0};
 
+        /*
+        // Add some logging
         if(logger.isDebugEnabled()){
 			logger.debug("Processing : " + dirName);
-		}
+        }
+        */
 
 		try (Stream<Path> paths = Files.walk(Paths.get(dirName))) {
 			paths.filter(Files::isRegularFile).forEach((Path p) -> {
 				File f = p.toFile();
 
+                /*
+                // Add some logging
                 if(logger.isDebugEnabled()){
                     logger.debug("Processing : " + f.getAbsolutePath());
                 }
+                */
 
                 size[0] += f.length();
 				count[0] += 1;
