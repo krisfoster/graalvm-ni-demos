@@ -1,0 +1,100 @@
+        <profile>
+            <id>NATIVE_IMAGE</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.8.0</version>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <artifactId>maven-assembly-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <configuration>
+                            <descriptorRefs>
+                                <descriptorRef>jar-with-dependencies</descriptorRef>
+                            </descriptorRefs>
+                                <archive>
+                                <manifest>
+                                    <mainClass>${app.main.class}</mainClass>
+                                </manifest>
+                            </archive>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>make-assembly</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>single</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.2.1</version>
+                        <executions>
+                          <execution>
+                            <goals>
+                              <goal>java</goal>
+                            </goals>
+                          </execution>
+                        </executions>
+                        <configuration>
+                          <mainClass>${app.main.class}</mainClass>
+                          <arguments>
+                          </arguments>
+                        </configuration>
+                      </plugin>
+
+                    <!--
+                        We can add native compilation into our project by updating the
+                        value, in the following plugin, of the skip tag, from ture to false.
+
+                        When you do this, every time you package your app a native image will
+                        be generated.
+
+                        This plugin will automatically do ahead of time compilation, using the
+                        native image tooling installed when we set up graalvm, to generate a
+                        stand alone executable.
+
+                        This executable has no dependancy on the JDK and will start faster
+                        than the java versio of this applicaiton.
+
+                        This will generate a native executable within the target/ directory
+
+                        In order to create the native image, just run:
+
+                            mvn package
+                    -->
+                    <plugin>
+                        <groupId>org.graalvm.nativeimage</groupId>
+                        <artifactId>native-image-maven-plugin</artifactId>
+                        <version>${graalvm.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>native-image</goal>
+                                </goals>
+                                <phase>package</phase>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <!-- Change the value of this to false, in order to generate a
+                                native image -->
+                            <skip>false</skip>
+                            <imageName>file-count</imageName>
+                            <buildArgs>
+                                --no-fallback --no-server
+                            </buildArgs>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
