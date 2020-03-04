@@ -41,9 +41,6 @@ package oracle;
  * SOFTWARE.
  */
 
-//import org.graalvm.nativeimage.ImageInfo;
-//import org.graalvm.nativeimage.ImageSingletons;
-
 
 /**
  * OUr App. This will count the number of files within a directory, and sub dirs,

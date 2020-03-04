@@ -149,7 +149,15 @@ tags. Note also that we can pass parameters to `native-image` through the `<buil
 ## Add Log4J and Why We Need the Tracing Agent
 
 So far, so good. But say we now want to add a library, or some code, to our project that
-relies on reflection. A good candidate for testing this out would be to add
+relies on reflection. A good candidate for testing this out would be to add `log4j`. Let's do that.
+
+We've already added it as a dependency in the `pom.xml` file, all we need to do is to open
+up the `ListDir.java` file and uncomment some things. Go through and uncomment the various lines
+that add the imports and the logging code.
+
+OK, so now we have added logging, let's see if it works by rebuilding an running our Java app:
+
+`$ mvn clean package exec:exec -PJAVA`
 
 
 ## Running Parts of the Application at Build Time
