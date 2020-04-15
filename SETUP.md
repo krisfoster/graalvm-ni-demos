@@ -1,4 +1,3 @@
-# Credit Suisse Workshop
 
 ## Getting Setup
 
