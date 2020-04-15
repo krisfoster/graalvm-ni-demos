@@ -13,12 +13,12 @@ A quick summary of this is:
     - Oracle GraalVM Enterprise Editipon Native Image Early Adopter based on JDK8 (Version 20.0.1)
     - Oracle GraalVM Enterprise Edition Python for JDK8 (Version 20.0.1)
     - Oracle GraalVM Enterprise Edition Ruby for JDK8 (Version 20.0.1)
-3. Install the downloaded GraalVM EE. This is a `tar.gz` file. You will need to extract it to a location that works for you and that will then become the root of your install. I chose the following: `~/bin/graal/20.0.0/java8/graalvm-ee-java8-20.0.1`
+3. Install the downloaded GraalVM EE. This is a `tar.gz` file. You will need to extract it to a location that works for you and that will then become the root of your install. I chose the following: `~/bin/graal/20.0.1/java8/graalvm-ee-java8-20.0.1`
 4. Update your environment in order to add a `GRAALVM_HOME` and addthings to the path. You can do this by updating your shell startup script, in my case  `~/.zshrc` as follows:
 
     ```
     # Note that I am using the JDK8 version.
-    export GRAALVM_HOME=~/bin/graal/20.0.0/java8/graalvm-ee-java8-20.0.0
+    export GRAALVM_HOME=~/bin/graal/20.0.1/java8/graalvm-ee-java8-20.0.1
     export JAVA_HOME="${GRAALVM_HOME}"
     # Add the bin dir of GraalVM to your path, so you will be able to reference the exes
     export PATH="${GRAALVM_HOME}/bin:$PATH"
