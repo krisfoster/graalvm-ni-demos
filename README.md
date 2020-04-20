@@ -86,8 +86,7 @@ The file we want is, `graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar`.
 
 Now we can generate a native image as follows, within the root of the project:
 
-`$ native-image -jar ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar --no-fal
-lback --no-server -H:Class=oracle.App -H:Name=file-count`
+`$ native-image -jar ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar --no-fallback --no-server -H:Class=oracle.App -H:Name=file-count`
 
 This will generate a file called, `file-count`, which you can run as follows:
 
@@ -104,8 +103,8 @@ Compare that to running the app as Java:
 What do the various parameters we passed to the `native-image` command do? Full documentation on these can be found [here](https://www.graalvm.org/docs/reference-manual/native-image/#image-generation-options):
 
 * `--no-server` : Don't start a build server process. For our examples we just want to run the builds
-* `--no-fallback` : Don't generate a fallback image. A fallback image requires the JVM and we generally dont want this
-* `-H:Class` : Tells the native-image tool what the class is with the entry point method (main)
+* `--no-fallback` : Don't generate a fallback image. A fallback image requires the JVM and we generally don't want this
+* `-H:Class` : Tells the native-image tool which class is with the entry point method (main)
 * `-H:Name` : This specifies what the output executable should be called
 
 We can also run the `native-image` tool using maven. If you look at the `pom.xml` file in the project
@@ -148,7 +147,7 @@ tags. Note also that we can pass parameters to `native-image` through the `<buil
 
 ## Add Log4J and Why We Need the Tracing Agent
 
-So far, so good. But say we now want to add a library, or some code, to our project that
+So far, so good. But say we now we want to add a library, or some code, to our project that
 relies on reflection. A good candidate for testing this out would be to add `log4j`. Let's do that.
 
 We've already added it as a dependency in the `pom.xml` file, all we need to do is to open
@@ -194,8 +193,8 @@ Anything that isn't called, we assume is not needed. This is a "closed World" as
 that no reflection is taking place. So we need to let the native image tool know about this.
 
 We could do this by hand, but luckily we don't have to. The GraalVM Java runtime comes with
-a tracing agent that we use that will do this for us. It generates a number of JSON files that
-map all the cases of reflection, JNI, proxies and resources that it can locate,
+a tracing agent that will do this for us. It generates a number of JSON files that
+map all the cases of reflection, JNI, proxies and resources that it can locate.
 
 For our case it will be sufficient to run this only once, as there is only one path through our
 application, but we should bear in mind that we may need to do this a number of times with
@@ -207,7 +206,7 @@ I have placed it into the source tree at:
 
 `src/main/resources/META-INF/native-image`
 
-If we place these files in this location, then the native image tooling will pick them up
+If we place these files in this location the native image tooling will pick them up
 automaticatly.
 
 So to run the tracing agent:
@@ -231,7 +230,7 @@ We should see that it works and that is also produces log messages.
 
 ## Note on Configuring Native Image Generation
 
-We cna also pass parameters to the native image tool using a properties files that
+We can also pass parameters to the native image tool using a properties files that
 typically lives in:
 
 `src/main/resources/META-INF/native-image/native-image.properties`
