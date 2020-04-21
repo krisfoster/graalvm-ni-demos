@@ -9,16 +9,16 @@ A quick summary of this is:
 
 1. Download the latest version of GraalVM EE for your OS, from [Download](https://www.oracle.com/downloads/graalvm-downloads.html)
 2. You will need to download the following packages:
-    - Oracle GraalVM Enterprise Edition for JDK8 (Version 20.0.1)
-    - Oracle GraalVM Enterprise Editipon Native Image Early Adopter based on JDK8 (Version 20.0.1)
-    - Oracle GraalVM Enterprise Edition Python for JDK8 (Version 20.0.1)
-    - Oracle GraalVM Enterprise Edition Ruby for JDK8 (Version 20.0.1)
-3. Install the downloaded GraalVM EE. This is a `tar.gz` file. You will need to extract it to a location that works for you and that will then become the root of your install. I chose the following: `~/bin/graal/20.0.1/java8/graalvm-ee-java8-20.0.1`
+    - Oracle GraalVM Enterprise Edition for JDK8 (Version 20.0.0)
+    - Oracle GraalVM Enterprise Editipon Native Image Early Adopter based on JDK8 (Version 20.0.0)
+    - Oracle GraalVM Enterprise Edition Python for JDK8 (Version 20.0.0)
+    - Oracle GraalVM Enterprise Edition Ruby for JDK8 (Version 20.0.0)
+3. Install the downloaded GraalVM EE. This is a `tar.gz` file. You will need to extract it to a location that works for you and that will then become the root of your install. I chose the following: `~/bin/graal/20.0.1/java8/graalvm-ee-java8-20.0.0`
 4. Update your environment in order to add a `GRAALVM_HOME` and addthings to the path. You can do this by updating your shell startup script, in my case  `~/.zshrc` as follows:
 
     ```
     # Note that I am using the JDK8 version.
-    export GRAALVM_HOME=~/bin/graal/20.0.1/java8/graalvm-ee-java8-20.0.1
+    export GRAALVM_HOME=~/bin/graal/20.0.0/java8/graalvm-ee-java8-20.0.0
     export JAVA_HOME="${GRAALVM_HOME}"
     # Add the bin dir of GraalVM to your path, so you will be able to reference the exes
     export PATH="${GRAALVM_HOME}/bin:$PATH"
@@ -28,10 +28,9 @@ A quick summary of this is:
 Create a new shell (or source your shell script) and type the following:
 
     ```
-    $ java -version
-    java version "1.8.0_251"
-    Java(TM) SE Runtime Environment (build 1.8.0_251-b08)
-    Java HotSpot(TM) 64-Bit Server VM GraalVM EE 20.0.1 (build 25.251-b08-jvmci-20.1-b02-dev, mixed mode)
+    java version "1.8.0_241"
+    Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
+    Java HotSpot(TM) 64-Bit Server VM GraalVM EE 20.0.0 (build 25.241-b07-jvmci-20.0-b02, mixed mode)
     ```
 
 Did you see the same output as above? If so, then it worked.
@@ -76,7 +75,7 @@ Full instructions can be found [here](https://www.graalvm.org/docs/reference-man
 
 1. Ensure you have the prerequisite libs available on your system: `glibc-devel, zlib-devel`
     - On linux these can be installed using your package manager
-2. `$ gu -L install <DOWNLOAD-LOCATION>/native-image-installable-svm-svmee-java8-linux-amd64-20.0.1.jar`
+2. `$ gu -L install <DOWNLOAD-LOCATION>/native-image-installable-svm-svmee-java8-linux-amd64-20.0.0.jar`
 3. Test the installation with: `native-image --version`
 
 ### Intalling Ruby
@@ -85,7 +84,7 @@ Full instructions can be found [here](https://www.graalvm.org/docs/reference-man
 
 But the basic steps are:
 
-1. `$gu install -L <DOWNLOAD-LOCATION>/ruby-installable-svm-svmee-java8-linux-amd64-20.0.1.jar`
+1. `$gu install -L <DOWNLOAD-LOCATION>/ruby-installable-svm-svmee-java8-linux-amd64-20.0.0.jar`
 
 Test that your installation works by running ruby:
 
@@ -102,12 +101,12 @@ Full instructions can be found [here](https://www.graalvm.org/docs/reference-man
 
 But the basic steps are:
 
-1. `$ gu -L install <DOWNLOAD-LOCATION>/python-installable-svm-svmee-java8-linux-amd64-20.0.1.jar`
+1. `$ gu -L install <DOWNLOAD-LOCATION>/python-installable-svm-svmee-java8-linux-amd64-20.0.0.jar`
 2. Test that Python is now installed:
 
         ```
         $ gu list
-        # You should see that Python EE version 20.0.1 is now installed
+        # You should see that Python EE version 20.0.0 is now installed
         $ graalpython
         ```
 
