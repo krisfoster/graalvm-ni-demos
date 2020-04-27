@@ -28,6 +28,7 @@ A quick summary of this is:
 Create a new shell (or source your shell script) and type the following:
 
     ```
+    java -version
     java version "1.8.0_241"
     Java(TM) SE Runtime Environment (build 1.8.0_241-b07)
     Java HotSpot(TM) 64-Bit Server VM GraalVM EE 20.0.0 (build 25.241-b07-jvmci-20.0-b02, mixed mode)
