@@ -12,7 +12,7 @@ namely:
 
 ## Setup
 
-Please install GraalVM. Instructions can be found [here](https://gist.github.com/krisfoster/1d4cce34996a47f55e9aa124413c666b).
+Please install GraalVM. Instructions can be found [here](./SETUP.md).
 
 You need a working version of Maven as well, and this should be covered in the installation
 instructions.
@@ -20,30 +20,30 @@ instructions.
 ## Outline of Demo
 
 We are going to use a fairly trivial application to walk through some of the features that
-are available ithin GraalVM Native Image. These are:
+are available within GraalVM Native Image. These are:
 
 1. How you can turn a Java app into a native executable
 2. How you deal with reflection etc.
 3. Using the command line tools for generating a native image, as well as using the maven tooling
 
 The application code that you have checked out builds a Java command line app that
-counts the number of files within the current directory and sub directories. It also calculates their
-total size.
+counts the number of files within the current directory and sub directories. It also calculates their total size.
 
-You will need to update the code, in the following various steps, in order to steps through the
+You will need to update the code, in the following various steps, in order to work through the
 points we listed above.
 
 Let's beign!
 
-## Quick Note on Maven Profile
+## Quick Note on Using Maven Profile
 
-The maven build has been split into several different profiles, each of which does something
-different. These profiles are called by passing a parameter that contains the name of the profile
-to maven. In the example below the `JAVA` proflie is called:
+The maven build has been split into several different profiles, each of which serves a different purpose. We can call these profiles by passing a parameter that contains the name of the profile to maven. In the example below the `JAVA` profile is called:
 
-`$ mvn clean package -PJAVA`
+![User Input](./images/userinput.png)
+```sh
+$ mvn clean package -PJAVA
+```
 
-The name of the proflie to be called is appended to the `-P` flag. We have the following profiles defined:
+The name of the proflie to be called is appended to the `-P` flag. We have the following profiles defined in the maven file:
 
 1. `JAVA` : This builds the Java applicaiton
 2. `JAVA_AGENT_LIB` : Ths builds the Java application with agent tracing. More on this later
@@ -51,19 +51,22 @@ The name of the proflie to be called is appended to the `-P` flag. We have the f
 
 ## Build the Basic Java App
 
-So first off, let's check that we can build the application adn that it works as expected.
+So first off, let's check that we can build the application and that it works as expected.
 
 From a command line:
 
-`$ mvn clean package exec:exec -PJAVA`
+![User Input](./images/userinput.png)
+```sh
+$ mvn clean package exec:exec -PJAVA
+```
 
 What the above does is to:
 
-1. Clean the project - get rid of any generated or compiled stuff
+1. Clean the project - gets rid of any generated, or compiled, stuff
 2. Create a Jar with our application in it. We will also be compiling an uber jar
 3. Runs the application by running the exec plugin
 
-This should generate som eoutput. Did it work for you?
+This should generate some output to the terminal. Did it work for you?
 
 ## Build a Native Image from the App
 
@@ -71,34 +74,47 @@ OK. Now let's build a native image version of our application.
 
 We will do this by hand first. First check that you have a compiled uber jar in your `target` dir:
 
-```
-    $ ls ./target
-      drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 archive-tmp
-      drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 classes
-      drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 generated-sources
-      -rw-rw-r-- 1 krf krf  496273 Mar  4 11:38 graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar
-      -rw-rw-r-- 1 krf krf    7894 Mar  4 11:38 graalvmnidemos-1.0-SNAPSHOT.jar
-      drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 maven-archiver
-      drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 maven-status
+![User Input](./images/userinput.png)
+```sh
+$ ls ./target
+  drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 archive-tmp
+  drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 classes
+  drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 generated-sources
+  -rw-rw-r-- 1 krf krf  496273 Mar  4 11:38 graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar
+  -rw-rw-r-- 1 krf krf    7894 Mar  4 11:38 graalvmnidemos-1.0-SNAPSHOT.jar
+  drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 maven-archiver
+  drwxrwxr-x 1 krf krf    4096 Mar  4 11:12 maven-status
 ```
 
 The file we want is, `graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar`.
 
 Now we can generate a native image as follows, within the root of the project:
 
-`$ native-image -jar ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar --no-fallback --no-server -H:Class=oracle.App -H:Name=file-count`
+![User Input](./images/userinput.png)
+```sh
+$ native-image -jar ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar --no-fallback --no-server -H:Class=oracle.App -H:Name=file-count
+```
 
 This will generate a file called, `file-count`, which you can run as follows:
 
-`./file-count`
+![User Input](./images/userinput.png)
+```
+./file-count
+```
 
 Try timing it:
 
-`time ./file-count`
+![User Input](./images/userinput.png)
+```sh
+time ./file-count
+```
 
-Compare that to running the app as Java:
+Compare that to the time running the app as Java:
 
-`time java -cp ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar oracle.App`
+![User Input](./images/userinput.png)
+```sh
+time java -cp ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar oracle.App
+```
 
 What do the various parameters we passed to the `native-image` command do? Full documentation on these can be found [here](https://www.graalvm.org/docs/reference-manual/native-image/#image-generation-options):
 
@@ -107,10 +123,9 @@ What do the various parameters we passed to the `native-image` command do? Full 
 * `-H:Class` : Tells the native-image tool which class is with the entry point method (main)
 * `-H:Name` : This specifies what the output executable should be called
 
-We can also run the `native-image` tool using maven. If you look at the `pom.xml` file in the project
-you should be able to find the following snippet:
+We can also run the `native-image` tool using maven. If you look at the `pom.xml` file in the project you should be able to find the following snippet:
 
-```
+```xml
 <!-- Native Image -->
 <plugin>
     <groupId>org.graalvm.nativeimage</groupId>
@@ -139,11 +154,9 @@ you should be able to find the following snippet:
         </buildArgs>
     </configuration>
 </plugin>
-
 ```
 
-This plugin does the heavy lifting of running the native image build. It can alsways be turned off suing the `<skip>true</skip>`
-tags. Note also that we can pass parameters to `native-image` through the `<buildArgs />` tag.
+This plugin does the heavy lifting of running the native image build. It can alsways be turned off using the `<skip>true</skip>` tags. Note also that we can pass parameters to `native-image` through the `<buildArgs />` tag.
 
 ## Add Log4J and Why We Need the Tracing Agent
 
@@ -154,21 +167,30 @@ We've already added it as a dependency in the `pom.xml` file, all we need to do 
 up the `ListDir.java` file and uncomment some things. Go through and uncomment the various lines
 that add the imports and the logging code.
 
-OK, so now we have added logging, let's see if it works by rebuilding an running our Java app:
+OK, so now we have added logging, let's see if it works by rebuilding and running our Java app:
 
-`$ mvn clean package exec:exec -PJAVA`
+![User Input](./images/userinput.png)
+```sh
+$ mvn clean package exec:exec -PJAVA
+```
 
 Great, that works. Now, let's build a native image using the maven profile:
 
-`$ mvn clean package -PNATIVE_IMAGE`
+![User Input](./images/userinput.png)
+```sh
+$ mvn clean package -PNATIVE_IMAGE
+```
 
 The run the built image:
 
-`$ ./target/file-count`
+![User Input](./images/userinput.png)
+```sh
+$ ./target/file-count
+```
 
 This generates an error:
 
-```
+```java
 Exception in thread "main" java.lang.NoClassDefFoundError
         at org.apache.log4j.Category.class$(Category.java:118)
         at org.apache.log4j.Category.<clinit>(Category.java:118)
@@ -187,10 +209,10 @@ Caused by: java.lang.ClassNotFoundException: org.apache.log4j.Category
         at java.lang.Class.forName(DynamicHub.java:1211)
         ... 12 more
 ```
+
 Why? This is caused by our addition of the log4j library. It depends heavily upon reflection
-and when we generate the native image we do a lot of aggressive analysis to see what is called.
-Anything that isn't called, we assume is not needed. This is a "closed World" assumption. We assume
-that no reflection is taking place. So we need to let the native image tool know about this.
+and when we generate the native image we do a lot of aggressive analysis to see what is being called.
+Anything that isn't called, we assume is not needed. This is a "closed World" assumption. We assume that no reflection is taking place. So we need to let the native image tool know about this.
 
 We could do this by hand, but luckily we don't have to. The GraalVM Java runtime comes with
 a tracing agent that will do this for us. It generates a number of JSON files that
@@ -204,36 +226,45 @@ The way to generate these JSON files is to add the following to the command line
 your Java application. Notes that the agent params **MUST** come before any jar or classpath paremetrs. Also note that we specify a directory into which we would like to put the output.
 I have placed it into the source tree at:
 
-`src/main/resources/META-INF/native-image`
+```
+src/main/resources/META-INF/native-image
+```
 
-If we place these files in this location the native image tooling will pick them up
-automaticatly.
+If we place these files in this location the native image tooling will pick them up automaticatly.
 
 So to run the tracing agent:
 
-`$ java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -cp ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar oracle.App`
+![User Input](./images/userinput.png)
+```sh
+$ java -agentlib:native-image-agent=config-output-dir=./src/main/resources/META-INF/native-image -cp ./target/graalvmnidemos-1.0-SNAPSHOT-jar-with-dependencies.jar oracle.App
+```
 
 The files should now be present.
 
-Note: I have also added a maven profile that will do this for you and this can be called as follows:
+***Note**: I have also added a maven profile that will do this for you and this can be called as follows:
 
-`$ mvn clean package exec:exec -PJAVA_AGENT_LIB`
-
-Now if we run the native image generation again and run the generated image:
-
+![User Input](./images/userinput.png)
+```sh
+$ mvn clean package exec:exec -PJAVA_AGENT_LIB
 ```
+
+Now if we run the native image generation again and then run the generated image:
+
+![User Input](./images/userinput.png)
+```sh
 $ mvn package -PNATIVE_IMAGE
 $ time ./target/.file-count
 ```
 
-We should see that it works and that is also produces log messages.
+We should see that it works and that it also produces log messages.
 
 ## Note on Configuring Native Image Generation
 
-We can also pass parameters to the native image tool using a properties files that
-typically lives in:
+We can also pass parameters to the native image tool using a properties files that typically lives in:
 
-`src/main/resources/META-INF/native-image/native-image.properties`
+```
+src/main/resources/META-INF/native-image/native-image.properties
+```
 
 In this deno we have included one such file.
 
@@ -245,4 +276,4 @@ We've see a few of the capabilities of GRAALVM's native image funcitonality, inc
 2. How to use maven to build a native image
 3. How to use the tracing agent to automate the process of finding relfection in our code
 
-We hope that this has been useful. Good Luck!
+We hope that this has been useful. Good Luck and start using Native Image!
