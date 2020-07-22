@@ -223,12 +223,5 @@ GraalVM is available on a number of pre-built docker images that can be download
 
 You can find the Docker Images [here](https://hub.docker.com/r/oracle/graalvm-ce).
 
-## Polyglot Demos
-
-## Native Image Demos
-
-## Proof of Concepts (POCs)
-
-
 
 
