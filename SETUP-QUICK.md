@@ -165,57 +165,11 @@ Full instructions can be found [here](https://www.graalvm.org/docs/reference-man
 2. `$ gu install -L <DOWNLOAD-DIR>/native-image-installable-svm-svmee-java8-darwin-amd64-20.1.1.jar`
 3. Test the installation with: `native-image --version`
 
-### Intalling Ruby
-
-Full instructions can be found [here](https://www.graalvm.org/docs/reference-manual/languages/ruby/#installing-ruby).
-
-But the basic steps are:
-
-1. `$gu install -L <DOWNLOAD-DIR>/ruby-installable-svm-svmee-java8-linux-amd64-20.1.1.jar`
-
-Test that your installation works by running ruby:
-
-~~~ {.bash}
-$ which ruby
-$ ruby --version
-~~~
-
-If you already have Ruby installed, then you will need to adjust your path or use the full path to the ruby binary.
-
-#### Installing Python
-
-Full instructions can be found [here](https://www.graalvm.org/docs/reference-manual/languages/python/#installing-python).
-
-But the basic steps are:
-
-1. `$ gu -L install <DOWNLOAD-DIR>/python-installable-svm-svmee-java8-linux-amd64-20.1.1.jar`
-2. Test that Python is now installed:
-
-~~~ {.bash}
-$ gu list
-# You should see that Python EE version 20.1.1 is now installed
-$ graalpython
-~~~
-
-#### Installing R
-
-Full instructions can be found [here](https://www.graalvm.org/docs/reference-manual/languages/r/#installing-r).
-
-When installing the R language module, it is best to consult the installation page, above, as thwere are a number of prerequisites that need to be installed.
-
 ### Install Visual Studio Code
 
 A number of plugins ahve been written for this editor, that allow for better integration with the GraalVM eco-system.
 
 You are more than welcome to use another editor. When it comes to the polyglot debugging, please make sure that you have the Google Chrome browser installed.
-
-### Install VS Code Plugins
-
-Please install the following plugins:
-
-1. GraalVM Extension Pack
-
-This will install all of the individual extensions
 
 ## Docker - Pre-built Docker Images
 
