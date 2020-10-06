@@ -15,12 +15,11 @@ Secondly the path that the core GraalVM download extracts to is different from t
 
 The third major difference is that on some versions of OSX the `GateKeeper` service on OSX will block you from running `GraalVM` as it is not a signed application / binary. This can be worked around in a number of ways:
 
-**UPDATE** Best way to do this is as follows (remove the quarantine attribute from the dirs):
-
-    ~~~ {.bash}
-    # Make sure to update the install dir int he following script
-    sudo xattr -r -d com.apple.quarantine <install-dir>/graalvm-ee-java8-20.1.1/
-    ~~~
+**UPDATE: Best way to do this is as follows (remove the quarantine attribute from the dirs):**
+~~~ {.bash}
+# Make sure to update the install dir int he following script
+sudo xattr -r -d com.apple.quarantine <install-dir>/graalvm-ee-java8-20.1.1/
+~~~
 
 **The following is kept for completeness sake. Try the previous method first**
 
@@ -182,7 +181,7 @@ You are more than welcome to use another editor. When it comes to the polyglot d
 
 ## Docker - Pre-built Docker Images
 
-GraalVM is available on a number of pre-built docker images that can be downloaded from Docker Hub. Currently only the Community Edition is available hee, but we will be making the Enterprise Edition available through Docker Hub soon.
+GraalVM is available on a number of pre-built docker images that can be downloaded from Docker Hub. Currently only the Community Edition is available.
 
 You can find the Docker Images [here](https://hub.docker.com/r/oracle/graalvm-ce).
 
