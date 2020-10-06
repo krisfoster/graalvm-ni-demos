@@ -15,6 +15,15 @@ Secondly the path that the core GraalVM download extracts to is different from t
 
 The third major difference is that on some versions of OSX the `GateKeeper` service on OSX will block you from running `GraalVM` as it is not a signed application / binary. This can be worked around in a number of ways:
 
+**UPDATE** Best way to do this is as follows (remove the quarantine attribute from the dirs):
+
+    ~~~ {.bash}
+    # Make sure to update the install dir int he following script
+    sudo xattr -r -d com.apple.quarantine <install-dir>/graalvm-ee-java8-20.1.1/
+    ~~~
+
+**The following is kept for completeness sake. Try the previous method first**
+
 * Disabling `GateKeeper`, running and then reenabling
 * On latter versions of OSX, you will get prompted that it is blocked and `GateKeeper` will prompt you to add an exception for it
 * You can add make a command line app allowed by using the `spctl` tool:
